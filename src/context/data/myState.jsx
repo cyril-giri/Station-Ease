@@ -179,9 +179,29 @@ function MyState(props) {
       }
   }
 
+  const[printReq, setPrintReq] = useState([]);
+
+  const fetchPrintReq = async ()=> {
+    setLoading(true)
+    try{
+        const result = await getDocs(collection(fireDB, "printreq"))
+        const printReqArray = [];
+        result.forEach((doc)=>{
+            printReqArray.push(doc.data());
+            setLoading(false)
+        });
+        setPrintReq(printReqArray);
+        setLoading(false);
+    }catch (error) {
+        console.log(error)
+        setLoading(false)
+    }
+  }
+
   useEffect(() => {
       getOrderData();
       getUserData();
+      fetchPrintReq();
   }, []);
 
   const [searchkey, setSearchkey] = useState('')
@@ -206,7 +226,7 @@ function MyState(props) {
           products, setProducts, addProduct, product,
           edithandle, updateProduct, deleteProduct, order,
           user, searchkey, setSearchkey,filterType,setFilterType,
-          filterPrice,setFilterPrice
+          filterPrice,setFilterPrice,printReq
       }}>
           {props.children}
       </MyContext.Provider>

@@ -9,17 +9,17 @@ import { Link, Navigate } from 'react-router-dom';
 
 function DashboardTab() {
     const context = useContext(myContext)
-    const { mode, product, edithandle, deleteProduct, order, user } = context
-    let [isOpen, setIsOpen] = useState(false);
-    console.log(order)
+    const { mode, product, edithandle, deleteProduct, order, user, printReq } = context
+    // let [isOpen, setIsOpen] = useState(false);
+    console.log(printReq)
 
-    function closeModal() {
-        setIsOpen(false)
-    }
+    // function closeModal() {
+    //     setIsOpen(false)
+    // }
 
-    function openModal() {
-        setIsOpen(true)
-    }
+    // function openModal() {
+    //     setIsOpen(true)
+    // }
 
 
     const goToAdd = () => {
@@ -151,107 +151,6 @@ function DashboardTab() {
                                 </div>
                             </div>
                         </TabPanel>
-                        {/* <TabPanel>
-                            <div className="relative overflow-x-auto mb-16">
-                                <h1 className=' text-center mb-5 text-3xl font-semibold underline' style={{ color: mode === 'dark' ? 'white' : '' }}>Order Details</h1>
-                                {order.map((allorder, index) => {
-                                    return (
-                                        <table key={index} className="w-full text-sm text-left text-gray-500 dark:text-gray-400" >
-                                            <thead className="text-xs text-black uppercase bg-gray-200 " style={{ backgroundColor: mode === 'dark' ? 'rgb(46 49 55)' : '', color: mode === 'dark' ? 'white' : '', }} >
-                                                <tr>
-                                                    <th scope="col" className="px-6 py-3">
-                                                        S.No.
-                                                    </th>
-                                                    <th scope="col" className="px-6 py-3">
-                                                        Payment Id
-                                                    </th>
-                                                    <th scope="col" className="px-6 py-3">
-                                                        Image
-                                                    </th>
-                                                    <th scope="col" className="px-6 py-3">
-                                                        Title
-                                                    </th>
-                                                    <th scope="col" className="px-6 py-3">
-                                                        Price
-                                                    </th>
-                                                    <th scope="col" className="px-6 py-3">
-                                                        Category
-                                                    </th>
-                                                    <th scope="col" className="px-6 py-3">
-                                                        Name
-                                                    </th>
-                                                    <th scope="col" className="px-6 py-3">
-                                                        Address
-                                                    </th>
-                                                    <th scope="col" className="px-6 py-3">
-                                                        Pincode
-                                                    </th>
-                                                    <th scope="col" className="px-6 py-3">
-                                                        Phone Number
-                                                    </th>
-                                                    <th scope="col" className="px-6 py-3">
-                                                        Email
-                                                    </th>
-                                                    <th scope="col" className="px-6 py-3">
-                                                        Date
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            {allorder.cartItems.map((item, index) => {
-                                                const { title, description, category, imageUrl, price } = item;
-                                                console.log(item)
-                                                return (
-                                                    <tbody key={item}>
-                                                        <tr className="bg-gray-50 border-b  dark:border-gray-700" style={{ backgroundColor: mode === 'dark' ? 'rgb(46 49 55)' : '', color: mode === 'dark' ? 'white' : '', }} >
-                                                            <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
-                                                                {index + 1}.
-                                                            </td>
-                                                            <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
-                                                                {allorder.paymentId}
-                                                            </td>
-                                                            <th scope="row" className="px-6 py-4 font-medium text-black whitespace-nowrap">
-                                                                <img className='w-16' src={imageUrl} alt="img" />
-                                                            </th>
-                                                            <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
-                                                                {title}
-                                                            </td>
-                                                            <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
-                                                                ₹{price}
-                                                            </td>
-                                                            <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
-                                                                {category}
-                                                            </td>
-
-                                                            <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
-                                                                {allorder.addressInfo.name}
-                                                            </td>
-                                                            <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
-                                                                {allorder.addressInfo.address}
-                                                            </td>
-                                                            <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
-                                                                {allorder.addressInfo.pincode}
-                                                            </td>
-                                                            <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
-                                                                {allorder.addressInfo.phoneNumber}
-                                                            </td>
-                                                            <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
-                                                                {allorder.email}
-                                                            </td>
-                                                            <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
-                                                                {allorder.date}
-                                                            </td>
-
-                                                        </tr>
-
-                                                    </tbody>
-                                                )
-                                            })}
-                                        </table>
-                                    )
-                                })}
-
-                            </div>
-                        </TabPanel> */}
                         <TabPanel>
                             <div className="relative overflow-x-auto mb-16">
                                 <h1 className='text-center mb-5 text-3xl font-semibold underline' style={{ color: mode === 'dark' ? 'white' : '' }}>Order Details</h1>
@@ -364,12 +263,13 @@ function DashboardTab() {
                                                 Uid
                                             </th>
                                             <th scope="col" className="px-6 py-3">
-                                                Date
+                                                Date & Time
                                             </th>
                                         </tr>
                                     </thead>
                                     {user.map((item, index) => {
-                                        const {name,uid,email,date} = item;
+                                        const {name,uid,email,time} = item;
+                                        const formattedDate = time.toDate().toLocaleString();
                                         return (
                                             <tbody key={item}>
                                                 <tr className="bg-gray-50 border-b  dark:border-gray-700" style={{ backgroundColor: mode === 'dark' ? 'rgb(46 49 55)' : '', color: mode === 'dark' ? 'white' : '', }} >
@@ -386,7 +286,7 @@ function DashboardTab() {
                                                         {uid}
                                                     </td>
                                                     <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
-                                                        {date}
+                                                        {formattedDate}
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -408,16 +308,22 @@ function DashboardTab() {
                                                 </th>
 
                                                 <th scope="col" className="px-6 py-3">
-                                                    User Name
+                                                    User email
                                                 </th>
                                                 <th scope="col" className="px-6 py-3">
                                                     File Name
                                                 </th>
                                                 <th scope="col" className="px-6 py-3">
-                                                    Pages
+                                                    No. of Pages
                                                 </th>
                                                 <th scope="col" className="px-6 py-3">
-                                                    Format
+                                                    page Colour
+                                                </th>
+                                                <th scope="col" className="px-6 py-3">
+                                                    page Layout
+                                                </th>
+                                                <th scope="col" className="px-6 py-3">
+                                                    page Orientation
                                                 </th>
                                                 <th scope="col" className="px-6 py-3">
                                                     Action
@@ -425,23 +331,31 @@ function DashboardTab() {
 
                                             </tr>
                                     </thead>
-
-                                            <tbody >
+                                    {printReq.map((item, index)=>{
+                                        const {email, downloadURL, filename, numPages, orderFullFilled, pageColor, pageLayout, pageOrientation} = item;
+                                        return(
+                                            <tbody key={item} >
                                                 <tr className="bg-gray-50 border-b  dark:border-gray-700" style={{ backgroundColor: mode === 'dark' ? 'rgb(46 49 55)' : '', color: mode === 'dark' ? 'white' : '', }} >
                                                     <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
-                                                        1
+                                                        {index+1}
                                                     </td>
                                                     <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
-                                                        cyril
+                                                        {email}
                                                     </td>
                                                     <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
-                                                        xyz
+                                                        <a href={downloadURL} target="_blank" rel="noopener noreferrer">{filename}</a>
                                                     </td>
                                                     <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
-                                                        2
+                                                        {numPages}
                                                     </td>
                                                     <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
-                                                        black&white
+                                                        {pageColor}
+                                                    </td>
+                                                    <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
+                                                        {pageLayout}
+                                                    </td>
+                                                    <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
+                                                        {pageOrientation}
                                                     </td>
                                                     <td className="px-4 py-4 text-black flex items-center justify-between" style={{ color: mode === 'dark' ? 'white' : '' }}>
                                                     <div>
@@ -454,9 +368,11 @@ function DashboardTab() {
 
                                                 </tr>
                                             </tbody>
-
+                                        )
+                                    })}
                                 </table>
                             </div>
+                            
                         </TabPanel>
 
                     </Tabs>

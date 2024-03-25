@@ -69,7 +69,7 @@ function Dashboard() {
                 </div>
             </div>
         </section>
-        <DashboardTab/>d
+        <DashboardTab/>
     </Layout>
   )
 }
