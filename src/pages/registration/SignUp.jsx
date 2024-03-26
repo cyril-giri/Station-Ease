@@ -1,14 +1,16 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
 import myContext from '../../context/data/myContext';
 
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { Timestamp, addDoc, collection } from 'firebase/firestore';
+import { createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import { Timestamp, addDoc, collection, doc, updateDoc } from 'firebase/firestore';
 import Loader from '../../components/loader/Loader';
-import { auth, fireDB } from '../../firebase/FirebaseConfig';
+import { auth, fireDB, messaging } from '../../firebase/FirebaseConfig';
 
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
+
+import { getToken} from 'firebase/messaging';
 
 function Signup() {
     const [name, setName] = useState("");
@@ -27,14 +29,17 @@ function Signup() {
         }
 
         try {
-            const users = await createUserWithEmailAndPassword(auth, email, password);
-
+            
             // console.log(users)
-
+            const token = await getToken(messaging, {vapidKey: "BKgygW8-jvWB_kTFyRTRR8dIPyMICS8lN2vLhcvLseNWinKGX9nFo5jub3qgGeJZbFlr_fqj_TyJerwyXD2-hEQ"});
+            console.log(token);
+            
+            const users = await createUserWithEmailAndPassword(auth, email, password);
             const user = {
                 name: name,
                 uid: users.user.uid,
                 email: users.user.email,
+                fcmToken: token,
                 time : Timestamp.now()
             }
             const userRef = collection(fireDB, "users")

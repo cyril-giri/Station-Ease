@@ -6,21 +6,59 @@ import { MdOutlineProductionQuantityLimits } from 'react-icons/md'
 import { FaUser, FaCartPlus, FaPrint } from 'react-icons/fa';
 import { AiFillShopping, AiFillPlusCircle, AiFillDelete } from 'react-icons/ai';
 import { Link, Navigate } from 'react-router-dom';
+import PrintableFileViewer from './PrintableFileViewer';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { fireDB, messaging } from '../../../firebase/FirebaseConfig';
+
+
 
 function DashboardTab() {
     const context = useContext(myContext)
     const { mode, product, edithandle, deleteProduct, order, user, printReq } = context
-    // let [isOpen, setIsOpen] = useState(false);
-    console.log(printReq)
 
-    // function closeModal() {
-    //     setIsOpen(false)
-    // }
-
-    // function openModal() {
-    //     setIsOpen(true)
-    // }
-
+    async function sendPrintNotification(userId) {
+        //const messaging = getMessaging();
+        
+        // Construct the query to fetch user data based on the userId
+        const fileQuery = query(collection(fireDB, 'users'), where('uid', '==', userId));
+    
+        try {
+            const fileSnapshot = await getDocs(fileQuery);
+    
+            // Check if the user document exists
+            if (!fileSnapshot.empty) {
+                const userData = fileSnapshot.docs[0].data();
+                const userFCMToken = userData.fcmToken;
+    
+                // Check if the user has an FCM token
+                if (userFCMToken) {
+                    // Construct your notification payload
+                    const payload = {
+                        notification: {
+                            title: 'Print Job Completed',
+                            body: 'Your print job has been completed.',
+                        },
+                        token: userFCMToken,
+                    };
+    
+                    // Send the notification
+                    sendMessage(messaging, payload)
+                        .then(() => {
+                            console.log('Notification sent successfully');
+                        })
+                        .catch((error) => {
+                            console.log('Error sending notification:', error);
+                        });
+                } else {
+                    console.log('User does not have an FCM token.');
+                }
+            } else {
+                console.log('User document not found.');
+            }
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+    }
 
     const goToAdd = () => {
         window.location.href = '/addproduct'
@@ -296,84 +334,157 @@ function DashboardTab() {
                                 </table>
                             </div>
                         </TabPanel>
+
                         <TabPanel>
+                            {/* Print Requests */}
                             <div className="relative overflow-x-auto mb-10">
-                                <h1 className=' text-center mb-5 text-3xl font-semibold underline' style={{ color: mode === 'dark' ? 'white' : '' }}>Print Request</h1>
-
+                                <h1 className='text-center mb-5 text-3xl font-semibold underline' style={{ color: mode === 'dark' ? 'white' : '' }}>Print Requests</h1>
                                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                    <thead className="text-xs text-black uppercase bg-gray-200 " style={{ backgroundColor: mode === 'dark' ? 'rgb(46 49 55)' : '', color: mode === 'dark' ? 'white' : '', }} >
-                                            <tr>
-                                                <th scope="col" className="px-6 py-3">
-                                                    S.No
-                                                </th>
-
-                                                <th scope="col" className="px-6 py-3">
-                                                    User email
-                                                </th>
-                                                <th scope="col" className="px-6 py-3">
-                                                    File Name
-                                                </th>
-                                                <th scope="col" className="px-6 py-3">
-                                                    No. of Pages
-                                                </th>
-                                                <th scope="col" className="px-6 py-3">
-                                                    page Colour
-                                                </th>
-                                                <th scope="col" className="px-6 py-3">
-                                                    page Layout
-                                                </th>
-                                                <th scope="col" className="px-6 py-3">
-                                                    page Orientation
-                                                </th>
-                                                <th scope="col" className="px-6 py-3">
-                                                    Action
-                                                </th>
-
-                                            </tr>
+                                    {/* Table Header */}
+                                    <thead className="text-xs text-black uppercase bg-gray-200" style={{ backgroundColor: mode === 'dark' ? 'rgb(46 49 55)' : '', color: mode === 'dark' ? 'white' : '' }}>
+                                        <tr>
+                                            <th scope="col" className="px-6 py-3">
+                                                S.No
+                                            </th>
+                                            <th scope="col" className="px-6 py-3">
+                                                User email
+                                            </th>
+                                            <th scope="col" className="px-6 py-3">
+                                                File Name
+                                            </th>
+                                            <th scope="col" className="px-6 py-3">
+                                                No. of Pages
+                                            </th>
+                                            <th scope="col" className="px-6 py-3">
+                                                Page Colour
+                                            </th>
+                                            <th scope="col" className="px-6 py-3">
+                                                Page Layout
+                                            </th>
+                                            <th scope="col" className="px-6 py-3">
+                                                Page Orientation
+                                            </th>
+                                            <th scope="col" className="px-6 py-3">
+                                                Action
+                                            </th>
+                                        </tr>
                                     </thead>
-                                    {printReq.map((item, index)=>{
-                                        const {email, downloadURL, filename, numPages, orderFullFilled, pageColor, pageLayout, pageOrientation} = item;
-                                        return(
-                                            <tbody key={item} >
-                                                <tr className="bg-gray-50 border-b  dark:border-gray-700" style={{ backgroundColor: mode === 'dark' ? 'rgb(46 49 55)' : '', color: mode === 'dark' ? 'white' : '', }} >
-                                                    <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
-                                                        {index+1}
+                                    {/* Table Body */}
+                                    <tbody>
+                                        {printReq.map((item, index) => {
+                                            const { email, downloadURL, filename, numPages, orderFullFilled, pageColor, pageLayout, pageOrientation, userId} = item;
+                                            return (
+                                                <tr key={index} className="bg-gray-50 border-b dark:border-gray-700" style={{ backgroundColor: mode === 'dark' ? 'rgb(46 49 55)' : '', color: mode === 'dark' ? 'white' : '' }}>
+                                                    <td className="px-6 py-4 text-black" style={{ color: mode === 'dark' ? 'white' : '' }}>
+                                                        {index + 1}
                                                     </td>
-                                                    <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
+                                                    <td className="px-6 py-4 text-black" style={{ color: mode === 'dark' ? 'white' : '' }}>
                                                         {email}
                                                     </td>
-                                                    <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
+                                                    <td className="px-6 py-4 text-black" style={{ color: mode === 'dark' ? 'white' : '' }}>
                                                         <a href={downloadURL} target="_blank" rel="noopener noreferrer">{filename}</a>
                                                     </td>
-                                                    <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
+                                                    <td className="px-6 py-4 text-black" style={{ color: mode === 'dark' ? 'white' : '' }}>
                                                         {numPages}
                                                     </td>
-                                                    <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
+                                                    <td className="px-6 py-4 text-black" style={{ color: mode === 'dark' ? 'white' : '' }}>
                                                         {pageColor}
                                                     </td>
-                                                    <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
+                                                    <td className="px-6 py-4 text-black" style={{ color: mode === 'dark' ? 'white' : '' }}>
                                                         {pageLayout}
                                                     </td>
-                                                    <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
+                                                    <td className="px-6 py-4 text-black" style={{ color: mode === 'dark' ? 'white' : '' }}>
                                                         {pageOrientation}
                                                     </td>
                                                     <td className="px-4 py-4 text-black flex items-center justify-between" style={{ color: mode === 'dark' ? 'white' : '' }}>
-                                                    <div>
-                                                        <button className="px-2 py-2 rounded-full text-white bg-red-500 mr-5" style={{ borderRadius: '30px' }}>Print</button>
-                                                    </div>
-                                                    <div>
-                                                        <button className="px-2 py-2 rounded-full text-white bg-red-500" style={{ borderRadius: '30px' }}>View</button>
-                                                    </div>
-                                                </td>
-
+                                                        <div>
+                                                        <button className="px-2 py-2 rounded-full text-white bg-red-500 mr-5" style={{ borderRadius: '30px' }}><a href={downloadURL} target="_blank" rel="noopener noreferrer">View</a></button>
+                                                        </div>
+                                                        <div>
+                                                            <button className="px-2 py-2 rounded-full text-white bg-red-500" style={{ borderRadius: '30px' }} onClick={sendPrintNotification(userId)}>Notify</button>
+                                                        </div>
+                                                    </td>
                                                 </tr>
-                                            </tbody>
-                                        )
-                                    })}
+                                            );
+                                        })}
+                                    </tbody>
                                 </table>
                             </div>
-                            
+                            {/* Print Fullfilled */}
+                            <div className="relative overflow-x-auto mb-10">
+                                <h1 className='text-center mb-5 text-3xl font-semibold underline' style={{ color: mode === 'dark' ? 'white' : '' }}>Print Fullfilled</h1>
+                                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                    {/* Table Header */}
+                                    <thead className="text-xs text-black uppercase bg-gray-200" style={{ backgroundColor: mode === 'dark' ? 'rgb(46 49 55)' : '', color: mode === 'dark' ? 'white' : '' }}>
+                                        <tr>
+                                            <th scope="col" className="px-6 py-3">
+                                                S.No
+                                            </th>
+                                            <th scope="col" className="px-6 py-3">
+                                                User email
+                                            </th>
+                                            <th scope="col" className="px-6 py-3">
+                                                File Name
+                                            </th>
+                                            <th scope="col" className="px-6 py-3">
+                                                No. of Pages
+                                            </th>
+                                            <th scope="col" className="px-6 py-3">
+                                                Page Colour
+                                            </th>
+                                            <th scope="col" className="px-6 py-3">
+                                                Page Layout
+                                            </th>
+                                            <th scope="col" className="px-6 py-3">
+                                                Page Orientation
+                                            </th>
+                                            <th scope="col" className="px-6 py-3">
+                                                Date
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    {/* Table Body */}
+                                    <tbody>
+                                    {printReq.map((item, index) => {
+                                            const { email, downloadURL, filename, numPages, orderFullFilled, pageColor, pageLayout, pageOrientation } = item;
+                                            if(orderFullFilled == true){
+                                                return (
+                                                    <tr key={index} className="bg-gray-50 border-b dark:border-gray-700" style={{ backgroundColor: mode === 'dark' ? 'rgb(46 49 55)' : '', color: mode === 'dark' ? 'white' : '' }}>
+                                                        <td className="px-6 py-4 text-black" style={{ color: mode === 'dark' ? 'white' : '' }}>
+                                                            {index + 1}
+                                                        </td>
+                                                        <td className="px-6 py-4 text-black" style={{ color: mode === 'dark' ? 'white' : '' }}>
+                                                            {email}
+                                                        </td>
+                                                        <td className="px-6 py-4 text-black" style={{ color: mode === 'dark' ? 'white' : '' }}>
+                                                            <a href={downloadURL} target="_blank" rel="noopener noreferrer">{filename}</a>
+                                                        </td>
+                                                        <td className="px-6 py-4 text-black" style={{ color: mode === 'dark' ? 'white' : '' }}>
+                                                            {numPages}
+                                                        </td>
+                                                        <td className="px-6 py-4 text-black" style={{ color: mode === 'dark' ? 'white' : '' }}>
+                                                            {pageColor}
+                                                        </td>
+                                                        <td className="px-6 py-4 text-black" style={{ color: mode === 'dark' ? 'white' : '' }}>
+                                                            {pageLayout}
+                                                        </td>
+                                                        <td className="px-6 py-4 text-black" style={{ color: mode === 'dark' ? 'white' : '' }}>
+                                                            {pageOrientation}
+                                                        </td>
+                                                        <td className="px-4 py-4 text-black flex items-center justify-between" style={{ color: mode === 'dark' ? 'white' : '' }}>
+                                                            
+                                                        </td>
+                                                    </tr>
+                                                );
+                                               
+                                            }
+                                            
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
                         </TabPanel>
+
 
                     </Tabs>
                 </div>

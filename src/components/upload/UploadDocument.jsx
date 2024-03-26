@@ -326,7 +326,7 @@ function UploadDocument() {
                 amount: printAmount * 100, // Amount in paisa
                 currency: 'INR',
                 receipt: 'print_request_' + uuidv4(),
-                name: 'E-Bharat',
+                name: 'Stationary-House',
                 description: 'Print Request',
                 payment_method: {
                     wallets: ['upi']

@@ -29,8 +29,8 @@ function Cart() {
     // console.log(temp)
   }, [cartItems])
 
-  const shipping = parseInt(100);
-  const grandTotal = shipping + totalAmount
+  
+  const grandTotal = totalAmount
 
   // add to cart
   const deleteCart = (item) => {
@@ -86,7 +86,7 @@ function Cart() {
       amount: parseInt(grandTotal * 100),
       currency: "INR",
       order_receipt: 'order_rcptid_' + name,
-      name: "E-Bharat",
+      name: "Stationary-House",
       description: "for testing purpose",
       handler: function (response) {
         // console.log(response)
@@ -96,6 +96,7 @@ function Cart() {
         const orderInfo = {
           cartItems,
           addressInfo,
+          orderFullFilled: false,
           date: new Date().toLocaleString(
             "en-US",
             {
@@ -164,10 +165,10 @@ function Cart() {
               <p className="text-gray-700" style={{ color: mode === 'dark' ? 'white' : '' }}>Subtotal</p>
               <p className="text-gray-700" style={{ color: mode === 'dark' ? 'white' : '' }}>₹{totalAmount}</p>
             </div>
-            <div className="flex justify-between">
+            {/* <div className="flex justify-between">
               <p className="text-gray-700" style={{ color: mode === 'dark' ? 'white' : '' }}>Shipping</p>
               <p className="text-gray-700" style={{ color: mode === 'dark' ? 'white' : '' }}>₹{shipping}</p>
-            </div>
+            </div> */}
             <hr className="my-4" />
             <div className="flex justify-between mb-3">
               <p className="text-lg font-bold" style={{ color: mode === 'dark' ? 'white' : '' }}>Total</p>

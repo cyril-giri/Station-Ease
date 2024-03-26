@@ -6,11 +6,12 @@ import DashboardTab from './DashboardTab';
 
 function Dashboard() {
     const context = useContext(myContext)
-    const { mode, user, product, order} = context
+    const { mode, user, product, order, printReq} = context
 
     const [userNo, setUserNo] = useState(0);
     const [productNo, setProductNo] = useState(0);
     const [orderNo, setOrderNo] = useState(0);
+    const [printNo, setPrintNo] = useState(0);
 
     useEffect(() => {
         setUserNo(user.length);
@@ -23,6 +24,10 @@ function Dashboard() {
     useEffect(() => {
         setOrderNo(order.length);
     }, [order]);
+
+    useEffect(() => {
+        setPrintNo(printReq.length);
+    }, [printReq]);
 
 
   return (
@@ -62,8 +67,8 @@ function Dashboard() {
                             <div className="text-purple-500 w-12 h-12 mb-3 inline-block" viewBox="0 0 24 24">
                                 <FaUserTie size={50} />
                             </div>
-                            <h2 className="title-font font-medium text-3xl text-black fonts1" style={{ color: mode === 'dark' ? 'white' : ''}}>20</h2>
-                            <p className=" text-purple-500  font-bold" style={{ color: mode === 'dark' ? 'white' : ''}}>Total Products</p>
+                            <h2 className="title-font font-medium text-3xl text-black fonts1" style={{ color: mode === 'dark' ? 'white' : ''}}>{printNo}</h2>
+                            <p className=" text-purple-500  font-bold" style={{ color: mode === 'dark' ? 'white' : ''}}>Total Prints</p>
                         </div>
                     </div>
                 </div>

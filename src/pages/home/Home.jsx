@@ -19,7 +19,7 @@ function Home() {
           <button className=' bg-gray-300 px-5 py-2 rounded-xl'>see more</button>
         </Link>
       </div>
-      <Track/>
+      {/* <Track/> */}
     </Layout>
   )
 }
