@@ -18,7 +18,7 @@ function DashboardTab() {
 
     async function sendPrintNotification(userId) {
         //const messaging = getMessaging();
-        
+        console.log(userId);
         // Construct the query to fetch user data based on the userId
         const fileQuery = query(collection(fireDB, 'users'), where('uid', '==', userId));
     
@@ -42,13 +42,8 @@ function DashboardTab() {
                     };
     
                     // Send the notification
-                    sendMessage(messaging, payload)
-                        .then(() => {
-                            console.log('Notification sent successfully');
-                        })
-                        .catch((error) => {
-                            console.log('Error sending notification:', error);
-                        });
+                    const response = await messaging.send(payload);
+                    console.log('Notification sent successfully:', response);
                 } else {
                     console.log('User does not have an FCM token.');
                 }
@@ -189,7 +184,7 @@ function DashboardTab() {
                                 </div>
                             </div>
                         </TabPanel>
-                        <TabPanel>
+                        {/* <TabPanel>
                             <div className="relative overflow-x-auto mb-16">
                                 <h1 className='text-center mb-5 text-3xl font-semibold underline' style={{ color: mode === 'dark' ? 'white' : '' }}>Order Details</h1>
                                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400" >
@@ -279,7 +274,105 @@ function DashboardTab() {
                                     </tbody>
                                 </table>
                             </div>
-                        </TabPanel>
+                        </TabPanel> */}
+                        <TabPanel>
+                        <div className="relative overflow-x-auto mb-16">
+                            <h1 className='text-center mb-5 text-3xl font-semibold underline' style={{ color: mode === 'dark' ? 'white' : '' }}>Order Details</h1>
+                            
+                            {/* Table for Fulfilled Orders */}
+                            <h2 className='text-center mb-3 text-xl font-semibold underline' style={{ color: mode === 'dark' ? 'white' : '' }}>Fulfilled Orders</h2>
+                            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                <thead className="text-xs text-black uppercase bg-gray-200" style={{ backgroundColor: mode === 'dark' ? 'rgb(46 49 55)' : '', color: mode === 'dark' ? 'white' : '' }}>
+                                    <tr>
+                                        <th scope="col" className="px-6 py-3">S.No.</th>
+                                        <th scope="col" className="px-6 py-3">Payment Id</th>
+                                        <th scope="col" className="px-6 py-3">Image</th>
+                                        <th scope="col" className="px-6 py-3">Title</th>
+                                        <th scope="col" className="px-6 py-3">Price</th>
+                                        <th scope="col" className="px-6 py-3">Category</th>
+                                        <th scope="col" className="px-6 py-3">Name</th>
+                                        <th scope="col" className="px-6 py-3">Address</th>
+                                        <th scope="col" className="px-6 py-3">Pincode</th>
+                                        <th scope="col" className="px-6 py-3">Phone Number</th>
+                                        <th scope="col" className="px-6 py-3">Email</th>
+                                        <th scope="col" className="px-6 py-3">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {/* Render fulfilled orders */}
+                                    {order.map((allorder, index) => {
+                                        if (allorder.orderFullFilled) {
+                                            return (
+                                                <tr key={index} className="bg-gray-50 border-b dark:border-gray-700" style={{ backgroundColor: mode === 'dark' ? 'rgb(46 49 55)' : '', color: mode === 'dark' ? 'white' : '' }}>
+                                                    <td className="px-6 py-4 text-black">{index + 1}.</td>
+                                                    <td className="px-6 py-4 text-black">{allorder.paymentId}</td>
+                                                    <td className="px-6 py-4 font-medium text-black whitespace-nowrap">
+                                                        <img className='w-16' src={allorder.cartItems[0].imageUrl} alt="img" />
+                                                    </td>
+                                                    <td className="px-6 py-4 text-black">{allorder.cartItems[0].title}</td>
+                                                    <td className="px-6 py-4 text-black">₹{allorder.cartItems[0].price}</td>
+                                                    <td className="px-6 py-4 text-black">{allorder.cartItems[0].category}</td>
+                                                    <td className="px-6 py-4 text-black">{allorder.addressInfo.name}</td>
+                                                    <td className="px-6 py-4 text-black">{allorder.addressInfo.address}</td>
+                                                    <td className="px-6 py-4 text-black">{allorder.addressInfo.pincode}</td>
+                                                    <td className="px-6 py-4 text-black">{allorder.addressInfo.phoneNumber}</td>
+                                                    <td className="px-6 py-4 text-black">{allorder.email}</td>
+                                                    <td className="px-6 py-4 text-black">{allorder.date}</td>
+                                                </tr>
+                                            )
+                                        }
+                                    })}
+                                </tbody>
+                            </table>
+
+                            {/* Table for Orders Pending Fulfillment */}
+                            <h2 className='text-center mb-3 text-xl font-semibold underline' style={{ color: mode === 'dark' ? 'white' : '' }}>Orders Pending Fulfillment</h2>
+                            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                <thead className="text-xs text-black uppercase bg-gray-200" style={{ backgroundColor: mode === 'dark' ? 'rgb(46 49 55)' : '', color: mode === 'dark' ? 'white' : '' }}>
+                                    <tr>
+                                        <th scope="col" className="px-6 py-3">S.No.</th>
+                                        <th scope="col" className="px-6 py-3">Payment Id</th>
+                                        <th scope="col" className="px-6 py-3">Image</th>
+                                        <th scope="col" className="px-6 py-3">Title</th>
+                                        <th scope="col" className="px-6 py-3">Price</th>
+                                        <th scope="col" className="px-6 py-3">Category</th>
+                                        <th scope="col" className="px-6 py-3">Name</th>
+                                        <th scope="col" className="px-6 py-3">Address</th>
+                                        <th scope="col" className="px-6 py-3">Pincode</th>
+                                        <th scope="col" className="px-6 py-3">Phone Number</th>
+                                        <th scope="col" className="px-6 py-3">Email</th>
+                                        <th scope="col" className="px-6 py-3">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {/* Render pending orders */}
+                                    {order.map((allorder, index) => {
+                                        if (!allorder.orderFullFilled) {
+                                            return (
+                                                <tr key={index} className="bg-gray-50 border-b dark:border-gray-700" style={{ backgroundColor: mode === 'dark' ? 'rgb(46 49 55)' : '', color: mode === 'dark' ? 'white' : '' }}>
+                                                    <td className="px-6 py-4 text-black">{index + 1}.</td>
+                                                    <td className="px-6 py-4 text-black">{allorder.paymentId}</td>
+                                                    <td className="px-6 py-4 font-medium text-black whitespace-nowrap">
+                                                        <img className='w-16' src={allorder.cartItems[0].imageUrl} alt="img" />
+                                                    </td>
+                                                    <td className="px-6 py-4 text-black">{allorder.cartItems[0].title}</td>
+                                                    <td className="px-6 py-4 text-black">₹{allorder.cartItems[0].price}</td>
+                                                    <td className="px-6 py-4 text-black">{allorder.cartItems[0].category}</td>
+                                                    <td className="px-6 py-4 text-black">{allorder.addressInfo.name}</td>
+                                                    <td className="px-6 py-4 text-black">{allorder.addressInfo.address}</td>
+                                                    <td className="px-6 py-4 text-black">{allorder.addressInfo.pincode}</td>
+                                                    <td className="px-6 py-4 text-black">{allorder.addressInfo.phoneNumber}</td>
+                                                    <td className="px-6 py-4 text-black">{allorder.email}</td>
+                                                    <td className="px-6 py-4 text-black">{allorder.date}</td>
+                                                    </tr>
+                                                    )
+                                                    }
+                                                    })}
+                                                    </tbody>
+                                                    </table>
+                                                    </div>
+                                                    </TabPanel>
+
 
                         <TabPanel>
                             <div className="relative overflow-x-auto mb-10">
@@ -401,7 +494,13 @@ function DashboardTab() {
                                                         <button className="px-2 py-2 rounded-full text-white bg-red-500 mr-5" style={{ borderRadius: '30px' }}><a href={downloadURL} target="_blank" rel="noopener noreferrer">View</a></button>
                                                         </div>
                                                         <div>
-                                                            <button className="px-2 py-2 rounded-full text-white bg-red-500" style={{ borderRadius: '30px' }} onClick={sendPrintNotification(userId)}>Notify</button>
+                                                        <button 
+                                                            className="px-2 py-2 rounded-full text-white bg-red-500" 
+                                                            style={{ borderRadius: '30px' }} 
+                                                            onClick={() => sendPrintNotification(item.userId)}>
+                                                            Notify
+                                                        </button>
+
                                                         </div>
                                                     </td>
                                                 </tr>
