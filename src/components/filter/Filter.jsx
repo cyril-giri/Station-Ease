@@ -1,14 +1,26 @@
-import React, { useContext } from 'react'
-import myContext from '../../context/data/myContext'
+import React, { useContext, useState } from 'react';
+import myContext from '../../context/data/myContext';
 
 function Filter() {
-    const context = useContext(myContext)
-    const { mode, searchkey, setSearchkey, filterType, setFilterType,
-        filterPrice, setFilterPrice, product } = context
+    const context = useContext(myContext);
+    const { mode, searchkey, setSearchkey, filterType, setFilterType, filterPrice, setFilterPrice, product } = context;
+    const [resetFilters, setResetFilters] = useState(false);
+
+    // Extract unique categories and prices
+    const uniqueCategories = [...new Set(product.map(item => item.category))];
+    const uniquePrices = [...new Set(product.map(item => item.price))];
+
+    // Handle reset filter button click
+    const handleResetFilters = () => {
+        setResetFilters(!resetFilters);
+        setSearchkey('');
+        setFilterType('');
+        setFilterPrice('');
+    };
+
     return (
-        <div className=' container mx-auto px-4 mt-5 '>
-            <div className="p-5 rounded-lg bg-gray-100 drop-shadow-xl border border-gray-200
-"  style={{ backgroundColor: mode === 'dark' ? '#282c34' : '', color: mode === 'dark' ? 'white' : '', }}>
+        <div className='container mx-auto px-4 mt-5'>
+            <div className="p-5 rounded-lg bg-gray-100 drop-shadow-xl border border-gray-200" style={{ backgroundColor: mode === 'dark' ? '#282c34' : '', color: mode === 'dark' ? 'white' : '' }}>
                 <div className="relative">
                     <div className="absolute flex items-center ml-2 h-full">
                         <svg className="w-4 h-4 fill-current text-primary-gray-dark" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -22,38 +34,49 @@ function Filter() {
                         value={searchkey}
                         onChange={(e) => setSearchkey(e.target.value)}
                         placeholder="Search here"
-                        className="px-8 py-3 w-full rounded-md bg-violet-0 border-transparent outline-0 text-sm" style={{ backgroundColor: mode === 'dark' ? 'rgb(64 66 70)' : '', color: mode === 'dark' ? 'white' : '', }} />
+                        className="px-8 py-3 w-full rounded-md bg-violet-0 border-transparent outline-0 text-sm"
+                        style={{ backgroundColor: mode === 'dark' ? 'rgb(64 66 70)' : '', color: mode === 'dark' ? 'white' : '' }}
+                    />
                 </div>
                 <div className="flex items-center justify-between mt-4">
-                    <p className="font-medium">
-                        Filters
-                    </p>
-                    <button className="px-4 py-2 bg-gray-50hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-md" style={{ color: mode === 'dark' ? 'white' : '' }}>
+                    <p className="font-medium">Filters</p>
+                    <button
+                        className="px-4 py-2 bg-gray-50 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-md"
+                        style={{ color: mode === 'dark' ? 'white' : '' }}
+                        onClick={handleResetFilters}
+                    >
                         Reset Filter
                     </button>
                 </div>
                 <div>
                     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
-                        <select value={filterType} onChange={(e) => setFilterType(e.target.value)} className="px-4 py-3 w-full rounded-md bg-gray-50 border-transparent outline-0 focus:border-gray-500 focus:bg-white focus:ring-0 text-sm" style={{ backgroundColor: mode === 'dark' ? 'rgb(64 66 70)' : '', color: mode === 'dark' ? 'white' : '', }}>
-                            {product.map((item, index) => {
-                                return (
-                                    <option value={item.category}>{item.category}</option>
-                                )
-                            })}
+                        <select
+                            value={filterType}
+                            onChange={(e) => setFilterType(e.target.value)}
+                            className="px-4 py-3 w-full rounded-md bg-gray-50 border-transparent outline-0 focus:border-gray-500 focus:bg-white focus:ring-0 text-sm"
+                            style={{ backgroundColor: mode === 'dark' ? 'rgb(64 66 70)' : '', color: mode === 'dark' ? 'white' : '' }}
+                        >
+                            <option value="">-- Select Category --</option>
+                            {uniqueCategories.map((category, index) => (
+                                <option key={index} value={category}>{category}</option>
+                            ))}
                         </select>
-                        <select value={filterPrice} onChange={(e) => setFilterPrice(e.target.value)} className="px-4 py-3 w-full rounded-md bg-gray-50 border-transparent outline-0  focus:border-gray-500 focus:bg-white focus:ring-0 text-sm" style={{ backgroundColor: mode === 'dark' ? 'rgb(64 66 70)' : '', color: mode === 'dark' ? 'white' : '', }}>
-                            {product.map((item, index) => {
-                                return (
-                                    <option value={item.price}>{item.price}</option>
-                                )
-                            })}
+                        <select
+                            value={filterPrice}
+                            onChange={(e) => setFilterPrice(e.target.value)}
+                            className="px-4 py-3 w-full rounded-md bg-gray-50 border-transparent outline-0  focus:border-gray-500 focus:bg-white focus:ring-0 text-sm"
+                            style={{ backgroundColor: mode === 'dark' ? 'rgb(64 66 70)' : '', color: mode === 'dark' ? 'white' : '' }}
+                        >
+                            <option value="">-- Select Price --</option>
+                            {uniquePrices.map((price, index) => (
+                                <option key={index} value={price}>{price}</option>
+                            ))}
                         </select>
-
                     </div>
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
-export default Filter
+export default Filter;
