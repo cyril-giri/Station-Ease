@@ -379,31 +379,28 @@ function UploadDocument() {
             </div>
             {/* Display user files */}
             <div className="mt-5">
-                <h2>User Files:</h2>
-                <ul>
+            <h2>User Files:</h2>
+            <ul className="space-y-4">
                 {userFiles.map((file, index) => (
-                <li key={index}>
-                    <a href={file.downloadURL} target="_blank" rel="noopener noreferrer">{file.name}</a>
-                    <button onClick={() => handleDeleteFile(file.id, file.name)}>Delete</button>
-                    <select value={file.pageColor} onChange={(e) => handlePageColorChange(file.id, e.target.value)}>
-                        <option value="black_and_white">Black and White</option>
-                        <option value="color">Color</option>
-                    </select>
-                    <select value={file.pageOrientation} onChange={(e) => handlePageOrientationChange(file.id, e.target.value)}>
-                        <option value="horizontal">Horizontal</option>
-                        <option value="vertical">Vertical</option>
-                    </select>
-                    <select value={file.pageLayout} onChange={(e) => handlePageLayoutChange(file.id, e.target.value)}>
-                        <option value="single_page">Single Page</option>
-                        <option value="front_and_back">Front & Back</option>
-                    </select>
-                    {file.numPages}
-                    <button onClick={() => handlePrintRequest(file.id, file.name, file.numPages, file.pageColor, file.pageOrientation, file.pageLayout, file.downloadURL)}>Print Request</button>
+                <li key={index} className="border rounded-lg p-4 bg-yellow-200 shadow-sm">
+                    <div className="flex items-center justify-between">
+                    <div className="mr-4">
+                        <a href={file.downloadURL} target="_blank" rel="noopener noreferrer" className="text-blue-500">{file.name}</a>
+                        <p className="text-gray-700 mt-1">Number of Pages: {file.numPages}</p>
+                        <p className="text-gray-700">Page Color: {file.pageColor}</p>
+                        <p className="text-gray-700">Page Layout: {file.pageLayout}</p>
+                        <p className="text-gray-700">Page Orientation: {file.pageOrientation}</p>
+                    </div>
+                    <div className="flex flex-col">
+                        <button onClick={() => handleDeleteFile(file.id, file.name)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded mb-2">Delete</button>
+                        <button onClick={() => handlePrintRequest(file.id, file.name, file.numPages, file.pageColor, file.pageOrientation, file.pageLayout, file.downloadURL)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">Print Request</button>
+                    </div>
+                    </div>
                 </li>
-            ))}
-
-                </ul>
+                ))}
+            </ul>
             </div>
+
         </div>
     );
 }

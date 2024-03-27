@@ -9,6 +9,7 @@ import { getMessaging } from "firebase/messaging"
 const firebaseConfig = {
   apiKey: "AIzaSyAhrkclfTBxl630MGoDMVThG3J6lxCkmnQ",
   authDomain: "stationaryweb.firebaseapp.com",
+  databaseURL: "https://stationaryweb-default-rtdb.firebaseio.com",
   projectId: "stationaryweb",
   storageBucket: "stationaryweb.appspot.com",
   messagingSenderId: "1012050590585",
