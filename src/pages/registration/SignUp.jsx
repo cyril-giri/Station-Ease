@@ -31,7 +31,7 @@ function Signup() {
         try {
             
             // console.log(users)
-            const token = await getToken(messaging, {vapidKey: "BKgygW8-jvWB_kTFyRTRR8dIPyMICS8lN2vLhcvLseNWinKGX9nFo5jub3qgGeJZbFlr_fqj_TyJerwyXD2-hEQ"});
+            const token = await getToken(messaging, {vapidKey: "BFjKFinC0FBao5FQ739u7DFIIeVQ6mkK_PM5EMOxr_hii_1VJxggvdlJhIeQnaC75plr1AVgKRJQvfkxocpRniA"});
             console.log(token);
             
             const users = await createUserWithEmailAndPassword(auth, email, password);

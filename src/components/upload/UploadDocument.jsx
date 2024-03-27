@@ -368,41 +368,53 @@ function UploadDocument() {
         }
     };
 
-    return (
-        <div className="flex flex-col items-center justify-center">
-            <div className="p-5 rounded-lg bg-gray-100 drop-shadow-xl border border-gray-200 w-4/5 my-10">
-                <h1>Upload Document</h1>
-                <input type="file" onChange={handleFileChange} />
-                <input type="text" placeholder="Enter filename" value={filename} onChange={handleFilenameChange} />
-                <button onClick={handleUpload}>Upload</button>
-                {uploadProgress > 0 && <progress value={uploadProgress} max="100">{uploadProgress}%</progress>}
-            </div>
-            {/* Display user files */}
-            <div className="mt-5">
-            <h2>User Files:</h2>
-            <ul className="space-y-4">
-                {userFiles.map((file, index) => (
-                <li key={index} className="border rounded-lg p-4 bg-yellow-200 shadow-sm">
-                    <div className="flex items-center justify-between">
-                    <div className="mr-4">
-                        <a href={file.downloadURL} target="_blank" rel="noopener noreferrer" className="text-blue-500">{file.name}</a>
-                        <p className="text-gray-700 mt-1">Number of Pages: {file.numPages}</p>
-                        <p className="text-gray-700">Page Color: {file.pageColor}</p>
-                        <p className="text-gray-700">Page Layout: {file.pageLayout}</p>
-                        <p className="text-gray-700">Page Orientation: {file.pageOrientation}</p>
-                    </div>
-                    <div className="flex flex-col">
-                        <button onClick={() => handleDeleteFile(file.id, file.name)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded mb-2">Delete</button>
-                        <button onClick={() => handlePrintRequest(file.id, file.name, file.numPages, file.pageColor, file.pageOrientation, file.pageLayout, file.downloadURL)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">Print Request</button>
-                    </div>
-                    </div>
-                </li>
-                ))}
-            </ul>
-            </div>
+   // Inside the UploadDocument component
 
-        </div>
-    );
+return (
+    <div className="flex flex-col items-center justify-center">
+      <div className="p-5 rounded-lg bg-gray-100 drop-shadow-xl border border-gray-200 w-4/5 my-10">
+        <h1>Upload Document</h1>
+        <input type="file" onChange={handleFileChange} />
+        <input type="text" placeholder="Enter filename" value={filename} onChange={handleFilenameChange} />
+        <button onClick={handleUpload}>Upload</button>
+        {uploadProgress > 0 && <progress value={uploadProgress} max="100">{uploadProgress}%</progress>}
+      </div>
+      {/* Display user files */}
+      <div className="mt-5">
+        <h2>User Files:</h2>
+        <ul className="space-y-4">
+          {userFiles.map((file, index) => (
+            <li key={index} className="flex items-center justify-between border rounded-lg p-4 bg-white shadow-sm">
+              <div>
+                <a href={file.downloadURL} target="_blank" rel="noopener noreferrer" className="text-blue-500">{file.name}</a>
+                <p className="text-gray-700">Number of Pages: {file.numPages}</p>
+                <p className="text-gray-700">Page Color: {file.pageColor}</p>
+                <p className="text-gray-700">Page Layout: {file.pageLayout}</p>
+                <p className="text-gray-700">Page Orientation: {file.pageOrientation}</p>
+              </div>
+              <div className="flex items-center space-x-4">
+                <button onClick={() => handleDeleteFile(file.id, file.name)} className="text-red-500 hover:text-red-700">Delete</button>
+                <select value={file.pageColor} onChange={(e) => handlePageColorChange(file.id, e.target.value)} className="border border-gray-300 rounded-lg px-2 py-1">
+                  <option value="black_and_white">Black and White</option>
+                  <option value="color">Color</option>
+                </select>
+                <select value={file.pageOrientation} onChange={(e) => handlePageOrientationChange(file.id, e.target.value)} className="border border-gray-300 rounded-lg px-2 py-1">
+                  <option value="horizontal">Horizontal</option>
+                  <option value="vertical">Vertical</option>
+                </select>
+                <select value={file.pageLayout} onChange={(e) => handlePageLayoutChange(file.id, e.target.value)} className="border border-gray-300 rounded-lg px-2 py-1">
+                  <option value="single_page">Single Page</option>
+                  <option value="front_and_back">Front & Back</option>
+                </select>
+                <button onClick={() => handlePrintRequest(file.id, file.name, file.numPages, file.pageColor, file.pageOrientation, file.pageLayout, file.downloadURL)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">Print Request</button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+  
 }
 
 export default UploadDocument;

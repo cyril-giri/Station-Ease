@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 import {getFirestore} from "firebase/firestore"
 import {getAuth} from "firebase/auth"
 import {getStorage} from "firebase/storage"
-import { getMessaging } from "firebase/messaging"
+import { getMessaging } from "firebase/messaging/sw"
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
